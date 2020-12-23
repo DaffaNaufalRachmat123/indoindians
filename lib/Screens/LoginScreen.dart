@@ -223,7 +223,7 @@ class LoginScreenState extends State<LoginScreen>{
                       )
                     )
                   ),
-                  SizedBox(height : 20),
+                  SizedBox(height : 50),
                   Row(
                     mainAxisAlignment : MainAxisAlignment.center,
                     children: <Widget>[
