@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  clippy_flutter: ^1.1.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -46,6 +46,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - Account.png
     - Banner.jpg
     - Cart.png
     - e_news.png
@@ -61,6 +62,8 @@ flutter:
     - image_5.jpg
     - image_6.jpg
     - indoindians_logo.png
+    - offer_logo.png
+    - google_icon_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -73,12 +76,13 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  fonts:
+    - family: Times New Roman
+      fonts:
+        - asset: assets/fonts/times_new_roman.ttf
+        - asset: assets/fonts/times_new_roman_bold.ttf
+        - asset: assets/fonts/times_new_roman_bold_italic.ttf
+        - asset: assets/fonts/times_new_roman_italic.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
