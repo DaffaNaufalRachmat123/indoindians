@@ -1,7 +1,10 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:clippy_flutter/trapezoid.dart';
+import 'package:clippy_flutter/triangle.dart';
 import 'package:flutter/material.dart';
+import 'package:indoindians/Models/Model.dart';
+import 'package:indoindians/Screens/Home.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -10,13 +13,27 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen>{
   static final List<String> imgList = [
-    'image_1.jpg',
-    'image_2.jpg',
-    'image_3.jpg',
-    'image_4.jpg',
-    'image_5.jpg',
-    'image_6.jpg'
+    'Banner.jpg',
+    'Banner.jpg',
+    'Banner.jpg',
+    'Banner.jpg',
+    'Banner.jpg',
+    'Banner.jpg'
   ];
+
+  static final List<Model> modelList = new List<Model>();
+  static final List<Model> model2List = new List<Model>();
+  @override
+  void initState(){
+    super.initState();
+    modelList.add(Model(id : 0 , image : 'image_1.jpg', title : 'Elegance' , price : 'IDR 250.000'));
+    modelList.add(Model(id : 1 , image : 'image_2.jpg',title : 'Cuddly Love' , price : 'IDR 300.000'));
+    modelList.add(Model(id : 2 , image : 'image_3.jpg',title : 'Joyful Toddly' , price : 'IDR 300.000'));
+
+    model2List.add(Model(id : 0 , image : 'image_4.jpg' , title : 'Hamper Set 31' , price : 'IDR 840.000'));
+    model2List.add(Model(id : 1 , image : 'image_5.jpg' , title : 'Hamper Set 24' , price : 'IDR 730.000'));
+    model2List.add(Model(id : 2 , image : 'image_6.jpg' , title : 'Hamper Set 18' , price : 'IDR 790.000'));
+  }
 
   final List<Widget> imageSliders = imgList.map((item) => Container(
     child: Container(
@@ -39,15 +56,6 @@ class HomeScreenState extends State<HomeScreen>{
                       end: Alignment.topCenter,
                     ),
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  child: Text(
-                    'No. ${imgList.indexOf(item)} image',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                 ),
               ),
             ],
@@ -65,119 +73,7 @@ class HomeScreenState extends State<HomeScreen>{
           fit: StackFit.expand,
           children: <Widget>[
             Positioned.fill(
-              child: Container(
-                color : Colors.red,
-                child : SafeArea(
-                  child : Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          InkWell(
-                            onTap : (){
-
-                            },
-                            child : IconButton(
-                                icon : Image.asset("icon_dashboard.png" , width : 30 , height : 30 , color : Colors.white)
-                            )
-                          ),
-                          Expanded(
-                            child : Row(
-                              mainAxisAlignment : MainAxisAlignment.end,
-                              children: <Widget>[
-                                Container(
-                                    margin : EdgeInsets.only(left : 40 , right : 40 , bottom : 30),
-                                    child : Trapezoid(
-                                      cutLength: 25.0,
-                                      edge: Edge.BOTTOM,
-                                      child: GestureDetector(
-                                        child: Container(
-                                            color: Color.fromARGB(255 , 27 , 42 , 61),
-                                            width: 150.0,
-                                            height: 30.0,
-                                            child : Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                Text("IND" , style : TextStyle(
-                                                    color : Colors.white,
-                                                    fontSize : 10,
-                                                    fontWeight : FontWeight.bold
-                                                )),
-                                                Image.asset("indoindians_logo.png" , width : 20 , height : 20),
-                                                Text("INDIANS" , style : TextStyle(
-                                                    color : Colors.white,
-                                                    fontSize : 10,
-                                                    fontWeight : FontWeight.bold
-                                                ))
-                                              ],
-                                            )
-                                        ),
-                                      ),
-                                    )
-                                )
-                              ],
-                            )
-                          ),
-                          Row(
-                            mainAxisAlignment : MainAxisAlignment.end,
-                            children: <Widget>[
-                              InkWell(
-                                  onTap : (){
-
-                                  },
-                                  child : Image.asset("icon_keranjang.png" , width : 25 , height : 25 , color : Colors.white)
-                              ),
-                              SizedBox(width : 10),
-                              InkWell(
-                                  onTap : (){
-
-                                  },
-                                  child : Image.asset("icon_wishlist.png" , width : 25 , height : 25 , color : Colors.white)
-                              ),
-                              InkWell(
-                                  onTap : (){
-
-                                  },
-                                  child : Image.asset("icon_notification.png" , width : 25 , height : 25 , color : Colors.white)
-                              ),
-                              SizedBox(width : 10)
-                            ],
-                          )
-                        ],
-                      ),
-                      CarouselSlider(
-                        items: imageSliders,
-                        options: CarouselOptions(
-                            autoPlay: true,
-                            aspectRatio: 2.0,
-                            onPageChanged: (index, reason) {
-                              setState(() {
-                                _current = index;
-                              });
-                            }
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: imgList.map((url) {
-                          int index = imgList.indexOf(url);
-                          return Container(
-                            width: 8.0,
-                            height: 8.0,
-                            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: _current == index
-                                  ? Color.fromRGBO(0, 0, 0, 0.9)
-                                  : Color.fromRGBO(0, 0, 0, 0.4),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  )
-                )
-              ),
+              child : Home(),
             ),
             Align(
               alignment: Alignment.bottomCenter,
