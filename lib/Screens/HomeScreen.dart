@@ -29,10 +29,6 @@ class HomeScreenState extends State<HomeScreen>{
     modelList.add(Model(id : 0 , image : 'image_1.jpg', title : 'Elegance' , price : 'IDR 250.000'));
     modelList.add(Model(id : 1 , image : 'image_2.jpg',title : 'Cuddly Love' , price : 'IDR 300.000'));
     modelList.add(Model(id : 2 , image : 'image_3.jpg',title : 'Joyful Toddly' , price : 'IDR 300.000'));
-
-    model2List.add(Model(id : 0 , image : 'image_4.jpg' , title : 'Hamper Set 31' , price : 'IDR 840.000'));
-    model2List.add(Model(id : 1 , image : 'image_5.jpg' , title : 'Hamper Set 24' , price : 'IDR 730.000'));
-    model2List.add(Model(id : 2 , image : 'image_6.jpg' , title : 'Hamper Set 18' , price : 'IDR 790.000'));
   }
 
   final List<Widget> imageSliders = imgList.map((item) => Container(
@@ -67,13 +63,14 @@ class HomeScreenState extends State<HomeScreen>{
   @override
   Widget build ( BuildContext context ){
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
       body : Container(
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
             Positioned.fill(
-              child : Home(),
+              child : Home()
             ),
             Align(
               alignment: Alignment.bottomCenter,
