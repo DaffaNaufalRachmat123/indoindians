@@ -24,6 +24,8 @@ class LoginBloc extends Bloc<LoginEvent , LoginState> {
       yield* mapLoginWithEmailPassword(event);
     } else if(event is LogoutAccount){
       yield* logoutState(event);
+    } else if(event is LoginForgot){
+      yield* mapForgotPassword(event);
     }
   }
   Stream<LoginState> logoutState(LogoutAccount state) async* {
@@ -31,6 +33,20 @@ class LoginBloc extends Bloc<LoginEvent , LoginState> {
     pref.remove(Constant.AUTH_PAYLOAD);
     pref.commit();
     yield Logout();
+  }
+  Stream<LoginState> mapForgotPassword(LoginForgot event) async* {
+    yield ForgotLoading();
+    try {
+      AuthService auth = new AuthService();
+      final response = await auth.forgotPassword(event.email);
+      if(response['is_success'] == true){
+        yield ForgotSuccess();
+      } else {
+        yield ForgotFailure(error : response['data']['message']);
+      }
+    } catch (e){
+      yield ForgotFailure(error : 'Error in apps');
+    }
   }
   Stream<LoginState> mapLoginWithEmailPassword(LoginWithEmailPassword event) async* {
     yield LoginLoading();

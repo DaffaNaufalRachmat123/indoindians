@@ -1,6 +1,7 @@
 import 'package:commons/commons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:indoindians/Blocs/Authentication/AuthenticationBloc.dart';
 import 'package:indoindians/Blocs/Authentication/AuthenticationEvent.dart';
 import 'package:indoindians/Blocs/Login/LoginBloc.dart';
@@ -8,6 +9,7 @@ import 'package:indoindians/Blocs/Login/LoginEvent.dart';
 import 'package:indoindians/Blocs/Login/LoginState.dart';
 import 'package:indoindians/Blocs/Models/CustomerModel.dart';
 import 'package:indoindians/Components/CustomDialog.dart';
+import 'package:indoindians/Components/LoadingDialog.dart';
 import 'package:indoindians/Configs/Constant.dart';
 import 'package:indoindians/Screens/HomeScreen.dart';
 import 'package:indoindians/Screens/RegisterScreen.dart';
@@ -41,11 +43,13 @@ class LoginScreenState extends State<LoginScreens>{
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passController = TextEditingController();
+  final eController = TextEditingController();
   bool checkedValue = false;
   bool autovalidate = false;
   bool isEmail = true;
   bool isPassword = true;
   bool isPasswordVisible = false;
+  bool isEmail2 = true;
   LoginBloc loginBloc;
   @override
   void dispose(){
@@ -63,6 +67,17 @@ class LoginScreenState extends State<LoginScreens>{
       } else {
         setState((){
           isEmail = false;
+        });
+      }
+    });
+    eController.addListener((){
+      if(eController.text.length > 0){
+        setState((){
+          isEmail2 = true;
+        });
+      } else {
+        setState((){
+          isEmail2 = false;
         });
       }
     });
@@ -108,6 +123,102 @@ class LoginScreenState extends State<LoginScreens>{
             )
         )
     );
+  }
+  openAlertBox(LoginBloc bloc) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0))),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            content: Container(
+              width : MediaQuery.of(context).size.width,
+              margin : EdgeInsets.symmetric(horizontal : 30.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text("Masukan Alamat Email" , style : TextStyle(
+                          color : Color.fromARGB(255 , 30 , 42 , 56),
+                          fontSize : 20,
+                          fontWeight : FontWeight.bold,
+                          fontFamily: "Times New Roman"
+                      )),
+                    ],
+                  ),
+                  SizedBox(height : 20),
+                  Container(
+                      decoration : BoxDecoration(
+                          color : Colors.white,
+                          borderRadius : BorderRadius.circular(5),
+                          border : Border.all(width : 1.5 , color : Color.fromARGB(255 , 27 , 42 , 61))
+                      ),
+                      child : TextFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          controller : eController,
+                          style : TextStyle(
+                            color : Colors.black,
+                          ),
+                          textAlignVertical : TextAlignVertical.center,
+                          decoration : InputDecoration(
+                              contentPadding : EdgeInsets.only(left : 15 , right : 15),
+                              border : InputBorder.none,
+                              suffixIcon : Icon(
+                                  Icons.email,
+                                  size : 25,
+                                  color : Color.fromARGB(255 , 194 , 194 , 194)
+                              )
+                          )
+                      )
+                  ),
+                  SizedBox(height : 10),
+                  InkWell(
+                    child:
+                    Material(
+                        child : InkWell(
+                            onTap : (){
+                              if(eController.text.isNotEmpty){
+                                bloc.add(LoginForgot(
+                                    email : eController.text.toString()
+                                ));
+                              } else {
+                                errorDialog(
+                                  context,
+                                  "Harap isi alamat email"
+                                );
+                              }
+                            },
+                            child : Container(
+                                width : MediaQuery.of(context).size.width,
+                                height : 50,
+                                decoration : BoxDecoration(
+                                    borderRadius : BorderRadius.circular(10),
+                                    color : Color.fromARGB(255 , 27 , 42 , 61)
+                                ),
+                                alignment : Alignment.center,
+                                child : Text("Reset Password" , style : TextStyle(
+                                    color : Colors.white,
+                                    fontSize : 15 ,
+                                    fontFamily : "Times New Roman"
+                                ))
+                            )
+                        )
+                    ),
+                  ),
+                  SizedBox(height : 20)
+                ],
+              ),
+            ),
+          );
+        });
   }
   Route _createRoute() {
     return PageRouteBuilder(
@@ -155,6 +266,22 @@ class LoginScreenState extends State<LoginScreens>{
           );
         } else if(state is LoginSuccess){
           Navigator.pushAndRemoveUntil(context , _createRouteHomeScreen() , (route) => false);
+        } else if(state is ForgotLoading){
+          Navigator.pop(context);
+          showDialog(context: context,
+              builder: (BuildContext context){
+                return LoadingDialog();
+              });
+        } else if(state is ForgotSuccess){
+          Navigator.pop(context);
+          successDialog(context ,
+          "Email reset password berhasil dikirim ke email");
+        } else if(state is ForgotFailure){
+          Navigator.pop(context);
+          errorDialog(
+            context,
+            "Gagal reset password"
+          );
         }
       },
       child : BlocBuilder<LoginBloc , LoginState>(
@@ -334,12 +461,17 @@ class LoginScreenState extends State<LoginScreens>{
                                   ))
                                 ],
                               ),
-                              Text("Lupa kata sandi?" , style : TextStyle(
-                                  color : Colors.black,
-                                  fontSize : 14 ,
-                                  fontWeight : FontWeight.bold,
-                                  fontFamily : "Times New Roman"
-                              ))
+                              InkWell(
+                                onTap : (){
+                                  openAlertBox(loginBloc);
+                                },
+                                child : Text("Lupa kata sandi?" , style : TextStyle(
+                                    color : Colors.black,
+                                    fontSize : 14 ,
+                                    fontWeight : FontWeight.bold,
+                                    fontFamily : "Times New Roman"
+                                ))
+                              )
                             ],
                           ),
                           state is LoginLoading ? Container(

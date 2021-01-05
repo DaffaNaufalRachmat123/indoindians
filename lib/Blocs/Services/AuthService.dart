@@ -81,4 +81,32 @@ class AuthService {
       };
     }
   }
+  Future forgotPassword(String email) async {
+    Map data = {
+      "email" : email,
+      "template" : "email_reset"
+    };
+    print(json.encode(data));
+    var response = await dio.put(UriConfig.getOldUrl() + "/rest/default/V1/customers/password" , data : data , options : Options(
+      headers : {
+        "Content-Type" : "application/json"
+      },
+      followRedirects: false,
+      validateStatus : (status){
+        return status <= 500;
+      }
+    ));
+    print(response);
+    if(response.statusCode == 200){
+      return {
+        "is_success" : true,
+        "data" : response.data
+      };
+    } else {
+      return {
+        "is_success" : false,
+        "data" : response.data
+      };
+    }
+  }
 }

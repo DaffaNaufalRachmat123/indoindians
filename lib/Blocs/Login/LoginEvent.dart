@@ -19,3 +19,10 @@ class LogoutAccount extends LoginEvent {
   @override
   List<Object> get props => [];
 }
+
+class LoginForgot extends LoginEvent {
+  final String email;
+  LoginForgot({@required this.email});
+  @override
+  List<Object> get props => [];
+}

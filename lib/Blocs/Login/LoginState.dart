@@ -16,3 +16,12 @@ class LoginFailure extends LoginState {
   @override
   List<Object> get props => [ error ];
 }
+
+class ForgotLoading extends LoginState {}
+class ForgotSuccess extends LoginState {}
+class ForgotFailure extends LoginState {
+  final String error;
+  ForgotFailure({@required this.error});
+  @override
+  List<Object> get props => [ error ];
+}
