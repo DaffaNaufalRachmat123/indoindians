@@ -14,3 +14,8 @@ class LoginWithEmailPassword extends LoginEvent {
   @override
   List<Object> get props => [ username , password ,isRemember ];
 }
+
+class LogoutAccount extends LoginEvent {
+  @override
+  List<Object> get props => [];
+}

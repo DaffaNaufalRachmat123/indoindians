@@ -1,3 +1,4 @@
+import 'package:commons/commons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:indoindians/Blocs/Authentication/AuthenticationBloc.dart';
@@ -6,6 +7,7 @@ import 'package:indoindians/Blocs/Login/LoginBloc.dart';
 import 'package:indoindians/Blocs/Login/LoginEvent.dart';
 import 'package:indoindians/Blocs/Login/LoginState.dart';
 import 'package:indoindians/Blocs/Models/CustomerModel.dart';
+import 'package:indoindians/Components/CustomDialog.dart';
 import 'package:indoindians/Configs/Constant.dart';
 import 'package:indoindians/Screens/HomeScreen.dart';
 import 'package:indoindians/Screens/RegisterScreen.dart';
@@ -41,17 +43,54 @@ class LoginScreenState extends State<LoginScreens>{
   final passController = TextEditingController();
   bool checkedValue = false;
   bool autovalidate = false;
+  bool isEmail = true;
+  bool isPassword = true;
+  bool isPasswordVisible = false;
   LoginBloc loginBloc;
+  @override
+  void dispose(){
+    emailController.dispose();
+    passController.dispose();
+    super.dispose();
+  }
+  @override
+  void initState(){
+    emailController.addListener((){
+      if(emailController.text.length > 0){
+        setState((){
+          isEmail = true;
+        });
+      } else {
+        setState((){
+          isEmail = false;
+        });
+      }
+    });
+    passController.addListener((){
+      if(passController.text.length > 0){
+        setState((){
+          isPassword = true;
+        });
+      } else {
+        setState((){
+          isPassword = false;
+        });
+      }
+    });
+    super.initState();
+  }
   Widget buildLoginButton(LoginBloc loginBloc){
     return Material(
         child : InkWell(
             onTap : (){
-              loginBloc.add(LoginWithEmailPassword(
-                  username : emailController.text.toString(),
-                  password : passController.text.toString(),
-                  isRemember: checkedValue
-              ));
-              print("Hello");
+              if(isEmail && isPassword){
+                loginBloc.add(LoginWithEmailPassword(
+                    username : emailController.text.toString(),
+                    password : passController.text.toString(),
+                    isRemember: checkedValue
+                ));
+                print("Hello");
+              }
             },
             child : Container(
                 width : MediaQuery.of(context).size.width,
@@ -70,20 +109,39 @@ class LoginScreenState extends State<LoginScreens>{
         )
     );
   }
-  @override
-  void initState(){
-    super.initState();
-    final authBloc = BlocProvider.of<AuthenticationBloc>(context);
-    authBloc.add(AppLoaded());
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => RegisterScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
   }
-  void getCredentials() async {
-    var pref = await SharedPreferences.getInstance();
-    String data = pref.getString(Constant.AUTH_PAYLOAD);
-    if(data == null){
-      print("Null");
-    } else {
-      print("Ada");
-    }
+  Route _createRouteHomeScreen() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
   }
   @override
   Widget build ( BuildContext context ){
@@ -91,10 +149,12 @@ class LoginScreenState extends State<LoginScreens>{
     return BlocListener<LoginBloc , LoginState>(
       listener : ( context , state ){
         if(state is LoginFailure){
-          print(state.error);
-          print("Gagal");
+          FocusScope.of(context).requestFocus(FocusNode());
+          errorDialog(context,
+          state.error,
+          );
         } else if(state is LoginSuccess){
-          print("Berhasil");
+          Navigator.pushAndRemoveUntil(context , _createRouteHomeScreen() , (route) => false);
         }
       },
       child : BlocBuilder<LoginBloc , LoginState>(
@@ -114,7 +174,6 @@ class LoginScreenState extends State<LoginScreens>{
                           )),
                           Form(
                               key : formKey,
-                              autovalidate : autovalidate,
                               child : Column(
                                 children: <Widget>[
                                   Row(
@@ -132,17 +191,22 @@ class LoginScreenState extends State<LoginScreens>{
                                       decoration : BoxDecoration(
                                           color : Colors.white,
                                           borderRadius : BorderRadius.circular(5),
-                                          border : Border.all(width : 1.5 , color : Color.fromARGB(255 , 27 , 42 , 61))
+                                          border : Border.all(width : 1.5 , color : isEmail ? Color.fromARGB(255 , 27 , 42 , 61) : Colors.red)
                                       ),
                                       child : TextFormField(
-                                          controller : emailController,
                                           keyboardType: TextInputType.emailAddress,
-                                          autocorrect: false,
+                                          controller : emailController,
                                           validator : (value){
-                                            if(value == null)
-                                              return 'Email is required';
-                                            else
-                                              return null;
+                                            if(value.length == 0){
+                                              setState((){
+                                                isEmail = false;
+                                              });
+                                            } else {
+                                              setState((){
+                                                isEmail = true;
+                                              });
+                                            }
+                                            return null;
                                           },
                                           style : TextStyle(
                                             color : Colors.black,
@@ -159,6 +223,21 @@ class LoginScreenState extends State<LoginScreens>{
                                           )
                                       )
                                   ),
+                                  SizedBox(height : 5),
+                                  !isEmail ?
+                                  Row(
+                                    mainAxisAlignment : MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                          "Email is required",
+                                          style : TextStyle(
+                                              color : Colors.red,
+                                              fontSize : 14,
+                                              fontFamily : "Times New Roman"
+                                          )
+                                      )
+                                    ],
+                                  ) : SizedBox(),
                                   SizedBox(height : 15),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -175,17 +254,23 @@ class LoginScreenState extends State<LoginScreens>{
                                       decoration : BoxDecoration(
                                           color : Colors.white,
                                           borderRadius : BorderRadius.circular(5),
-                                          border : Border.all(width : 1.5 , color : Color.fromARGB(255 , 27 , 42 , 61))
+                                          border : Border.all(width : 1.5 , color : isPassword ? Color.fromARGB(255 , 27 , 42 , 61) : Colors.red)
                                       ),
                                       child : TextFormField(
+                                          obscureText: !isPasswordVisible,
                                           controller : passController,
                                           validator : (value){
-                                            if(value == null)
-                                              return 'Password is required';
-                                            else
-                                              return null;
+                                            if(value.length == 0){
+                                              setState((){
+                                                isPassword = false;
+                                              });
+                                            } else {
+                                              setState((){
+                                                isPassword = true;
+                                              });
+                                            }
+                                            return null;
                                           },
-                                          obscureText: true,
                                           style : TextStyle(
                                             color : Colors.black,
                                           ),
@@ -193,14 +278,36 @@ class LoginScreenState extends State<LoginScreens>{
                                           decoration : InputDecoration(
                                               contentPadding : EdgeInsets.only(left : 15 , right : 15),
                                               border : InputBorder.none,
-                                              suffixIcon : Icon(
-                                                  Icons.lock,
-                                                  size : 25,
-                                                  color : Color.fromARGB(255 , 194 , 194 , 194)
+                                              suffixIcon : IconButton(
+                                                  onPressed : (){
+                                                    setState((){
+                                                      isPasswordVisible = !isPasswordVisible;
+                                                    });
+                                                  },
+                                                  icon : Icon(
+                                                      isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                                                      size : 25,
+                                                      color : Color.fromARGB(255 , 194 , 194 , 194)
+                                                  )
                                               )
                                           )
                                       )
                                   ),
+                                  SizedBox(height : 5),
+                                  !isPassword ?
+                                  Row(
+                                    mainAxisAlignment : MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                          "Password is required",
+                                          style : TextStyle(
+                                              color : Colors.red,
+                                              fontSize : 14,
+                                              fontFamily : "Times New Roman"
+                                          )
+                                      )
+                                    ],
+                                  ) : SizedBox()
                                 ],
                               )
                           ),
@@ -235,7 +342,11 @@ class LoginScreenState extends State<LoginScreens>{
                               ))
                             ],
                           ),
-                          state == LoginLoading ? CircularProgressIndicator() : buildLoginButton(loginBloc),
+                          state is LoginLoading ? Container(
+                            child : Center(
+                              child : CircularProgressIndicator()
+                            )
+                          ) : buildLoginButton(loginBloc),
                           SizedBox(height : 20),
                           Row(
                               mainAxisAlignment : MainAxisAlignment.spaceBetween ,
@@ -321,11 +432,12 @@ class LoginScreenState extends State<LoginScreens>{
                             children: <Widget>[
                               InkWell(
                                   onTap : () async{
-                                    var response = await Navigator.push(context , MaterialPageRoute(
-                                        builder : (BuildContext context) => RegisterScreen()
-                                    ));
+                                    var response = await Navigator.push(context , _createRoute());
                                     if(response != null){
-
+                                      if(response["is_register_success"] == true){
+                                        successDialog(context ,
+                                        "Berhasil Daftar , Silahkan Login");
+                                      }
                                     }
                                   },
                                   child : Text("Segera daftar" , style : TextStyle(

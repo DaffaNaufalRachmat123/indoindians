@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:indoindians/Configs/Constant.dart';
+import 'package:indoindians/Screens/HomeScreen.dart';
 import 'package:indoindians/Screens/LoginScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -11,11 +15,28 @@ class SplashScreen extends StatefulWidget {
 class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    getCredentials();
     super.initState();
-    Timer(
-        Duration(seconds: 2),
-            () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => LoginScreen())));
+  }
+  void getCredentials() async {
+    var pref = await SharedPreferences.getInstance();
+    String data = pref.getString(Constant.AUTH_PAYLOAD);
+    if(data != null){
+      var decoded = json.decode(data);
+      print(decoded['token']);
+    }
+    if(data != null){
+      Timer(
+          Duration(seconds: 2),
+              () => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                  builder : ( context ) => HomeScreen()
+              ), (route) => false));
+    } else {
+      Timer(
+          Duration(seconds: 2),
+              () => Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) => LoginScreen())));
+    }
   }
   @override
   Widget build ( BuildContext context ){

@@ -11,6 +11,7 @@ class User {
   final int website_id;
   final int disable_auto_group_change;
   final String token;
+  final bool isRemember;
   User({
     this.id,
     this.group_id,
@@ -23,7 +24,8 @@ class User {
     this.store_id,
     this.website_id,
     this.disable_auto_group_change,
-    this.token
+    this.token,
+    this.isRemember
   });
   factory User.fromJson(Map<String , dynamic> json){
     return User(
@@ -51,6 +53,8 @@ class User {
     "lastname" : lastname,
     "store_id" : store_id,
     "website_id" : website_id,
-    "disable_auto_group_change" : disable_auto_group_change
+    "disable_auto_group_change" : disable_auto_group_change,
+    "token" : token,
+    "is_remember" : isRemember
   };
 }

@@ -58,11 +58,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent , AuthenticationState>
     }
   }
   Stream<AuthenticationState> mapUserLoggedInState(UserLoggedIn event) async* {
-    if(event.isRemember){
-      var pref = await SharedPreferences.getInstance();
-      pref.setString(Constant.AUTH_PAYLOAD , event.user.toJsonSave().toString());
-      pref.commit();
-    }
+    var pref = await SharedPreferences.getInstance();
+    pref.setString(Constant.AUTH_PAYLOAD , json.encode(event.user.toJsonSave()));
+    pref.commit();
     yield AuthenticationAuthenticated(user : event.user);
   }
   Stream<AuthenticationState> mapUserLoggedOutToState(UserLoggedOut event) async* {

@@ -4,6 +4,7 @@ import 'package:clippy_flutter/trapezoid.dart';
 import 'package:clippy_flutter/triangle.dart';
 import 'package:flutter/material.dart';
 import 'package:indoindians/Models/Model.dart';
+import 'package:indoindians/Screens/AccountScreen.dart';
 import 'package:indoindians/Screens/Home.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,6 +24,11 @@ class HomeScreenState extends State<HomeScreen>{
 
   static final List<Model> modelList = new List<Model>();
   static final List<Model> model2List = new List<Model>();
+  static final List<Widget> pageList = [
+    Home(),
+    AccountScreen()
+  ];
+  int page_index = 0;
   @override
   void initState(){
     super.initState();
@@ -70,7 +76,7 @@ class HomeScreenState extends State<HomeScreen>{
           fit: StackFit.expand,
           children: <Widget>[
             Positioned.fill(
-              child : Home()
+              child : pageList[page_index]
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -93,7 +99,9 @@ class HomeScreenState extends State<HomeScreen>{
                   children: <Widget>[
                     InkWell(
                       onTap : (){
-
+                        setState((){
+                          page_index = 0;
+                        });
                       },
                       child : Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -153,7 +161,9 @@ class HomeScreenState extends State<HomeScreen>{
                     ),
                     InkWell(
                         onTap : (){
-
+                          setState((){
+                            page_index = 1;
+                          });
                         },
                         child : Column(
                           mainAxisAlignment: MainAxisAlignment.center,
