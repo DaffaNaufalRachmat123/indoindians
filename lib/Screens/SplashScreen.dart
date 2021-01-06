@@ -21,10 +21,7 @@ class SplashScreenState extends State<SplashScreen> {
   void getCredentials() async {
     var pref = await SharedPreferences.getInstance();
     String data = pref.getString(Constant.AUTH_PAYLOAD);
-    if(data != null){
-      var decoded = json.decode(data);
-      print(decoded['token']);
-    }
+    print(data);
     if(data != null){
       Timer(
           Duration(seconds: 2),

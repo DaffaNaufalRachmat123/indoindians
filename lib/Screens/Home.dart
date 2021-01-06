@@ -1,9 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:clippy_flutter/trapezoid.dart';
+import 'package:clippy_flutter/trapezoid.dart';
 import 'package:clippy_flutter/triangle.dart';
 import 'package:flutter/material.dart';
+import 'package:indoindians/Components/ExpandableListView.dart';
+import 'package:indoindians/Components/NavigationDrawer.dart';
 import 'package:indoindians/Components/ScrollColumnExpandable.dart';
 import 'package:indoindians/Models/Model.dart';
+import 'package:indoindians/Models/NavItem.dart';
+import 'package:indoindians/Models/SubNavItem.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -11,6 +16,7 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   static final List<String> imgList = [
     'Banner.jpg',
     'Banner.jpg',
@@ -29,6 +35,8 @@ class HomeState extends State<Home> {
     Model(id : 1 , image : 'image_5.jpg' , title : 'Hamper Set 24' , price : 'IDR 730.000'),
     Model(id : 2 , image : 'image_6.jpg' , title : 'Hamper Set 18' , price : 'IDR 790.000')
   ];
+  List<NavItem> itemList = new List<NavItem>();
+
   final List<Widget> imageSliders = imgList.map((item) => Container(
     child: Container(
       child: ClipRRect(
@@ -61,6 +69,8 @@ class HomeState extends State<Home> {
   @override
   Widget build ( BuildContext context ){
     return Scaffold(
+      key : scaffoldKey,
+      drawer : NavigationDrawer(),
       body : Container(
         child : Stack(
           children: <Widget>[
@@ -79,6 +89,93 @@ class HomeState extends State<Home> {
                         children: <Widget>[
                           Column(
                             children: <Widget>[
+                              Container(
+                                width : MediaQuery.of(context).size.width,
+                                child : Row(
+                                  mainAxisAlignment : MainAxisAlignment.spaceBetween ,
+                                  children: <Widget>[
+                                    InkWell(
+                                      onTap : (){
+
+                                      },
+                                      child : Container(
+                                        margin : EdgeInsets.only(left : 10),
+                                        child : InkWell(
+                                          onTap : (){
+                                            scaffoldKey.currentState.openDrawer();
+                                          },
+                                          child : Image.asset("icon_dashboard.png" , width : 25 , height : 25 , color : Colors.black)
+                                        )
+                                      )
+                                    ),
+                                    Expanded(
+                                        child : Row(
+                                          mainAxisAlignment : MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Container(
+                                                margin : EdgeInsets.only(left : 60 , bottom : 3),
+                                                child : Trapezoid(
+                                                    cutLength : 25.0,
+                                                    edge : Edge.BOTTOM,
+                                                    child : GestureDetector(
+                                                        child : Container(
+                                                            padding : EdgeInsets.only(left : 50, right : 50),
+                                                            decoration : BoxDecoration(
+                                                                color: Color.fromARGB(255 , 27 , 42 , 61),
+                                                                borderRadius : BorderRadius.only(topLeft : Radius.circular(-10) , topRight : Radius.circular(-10))
+                                                            ),
+                                                            height : 30.0,
+                                                            child : Row(
+                                                              mainAxisAlignment : MainAxisAlignment.center,
+                                                              children: <Widget>[
+                                                                Text("IND" , style : TextStyle(
+                                                                    color : Colors.white,
+                                                                    fontSize : 10,
+                                                                    fontWeight : FontWeight.bold
+                                                                )),
+                                                                Image.asset("indoindians_logo.png" , width : 20 , height : 20),
+                                                                Text("INDIANS" , style : TextStyle(
+                                                                    color : Colors.white,
+                                                                    fontSize : 10,
+                                                                    fontWeight : FontWeight.bold
+                                                                ))
+                                                              ],
+                                                            )
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                          ],
+                                        )
+                                    ),
+                                    Row(
+                                      mainAxisAlignment : MainAxisAlignment.end,
+                                      children: <Widget>[
+                                        InkWell(
+                                            onTap : (){
+
+                                            },
+                                            child : Image.asset("icon_keranjang.png" , width : 25 , height : 25 , color : Colors.black)
+                                        ),
+                                        SizedBox(width : 10),
+                                        InkWell(
+                                            onTap : (){
+
+                                            },
+                                            child : Image.asset("icon_wishlist.png" , width : 25 , height : 25 , color : Colors.black)
+                                        ),
+                                        InkWell(
+                                            onTap : (){
+
+                                            },
+                                            child : Image.asset("icon_notification.png" , width : 25 , height : 25 , color : Colors.black)
+                                        ),
+                                        SizedBox(width : 10)
+                                      ],
+                                    )
+                                  ],
+                                )
+                              ),
                               AspectRatio(
                                 aspectRatio : 2.1,
                                 child : Container(
@@ -316,85 +413,6 @@ class HomeState extends State<Home> {
                                 ),
                               ),
                               SizedBox(height : 20),
-                            ],
-                          ),
-                          Column(
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  InkWell(
-                                      onTap : (){
-
-                                      },
-                                      child : IconButton(
-                                          icon : Image.asset("icon_dashboard.png" , width : 30 , height : 30 , color : Colors.white)
-                                      )
-                                  ),
-                                  Expanded(
-                                      child : Row(
-                                        mainAxisAlignment : MainAxisAlignment.end,
-                                        children: <Widget>[
-                                          Container(
-                                              margin : EdgeInsets.only(left : 40 , right : 35 , bottom : 30),
-                                              child : Trapezoid(
-                                                cutLength: 25.0,
-                                                edge: Edge.BOTTOM,
-                                                child: GestureDetector(
-                                                  child: Container(
-                                                      color: Color.fromARGB(255 , 27 , 42 , 61),
-                                                      width: 150.0,
-                                                      height: 30.0,
-                                                      child : Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: <Widget>[
-                                                          Text("IND" , style : TextStyle(
-                                                              color : Colors.white,
-                                                              fontSize : 10,
-                                                              fontWeight : FontWeight.bold
-                                                          )),
-                                                          Image.asset("indoindians_logo.png" , width : 20 , height : 20),
-                                                          Text("INDIANS" , style : TextStyle(
-                                                              color : Colors.white,
-                                                              fontSize : 10,
-                                                              fontWeight : FontWeight.bold
-                                                          ))
-                                                        ],
-                                                      )
-                                                  ),
-                                                ),
-                                              )
-                                          )
-                                        ],
-                                      )
-                                  ),
-                                  Row(
-                                    mainAxisAlignment : MainAxisAlignment.end,
-                                    children: <Widget>[
-                                      InkWell(
-                                          onTap : (){
-
-                                          },
-                                          child : Image.asset("icon_keranjang.png" , width : 25 , height : 25 , color : Colors.white)
-                                      ),
-                                      SizedBox(width : 10),
-                                      InkWell(
-                                          onTap : (){
-
-                                          },
-                                          child : Image.asset("icon_wishlist.png" , width : 25 , height : 25 , color : Colors.white)
-                                      ),
-                                      InkWell(
-                                          onTap : (){
-
-                                          },
-                                          child : Image.asset("icon_notification.png" , width : 25 , height : 25 , color : Colors.white)
-                                      ),
-                                      SizedBox(width : 10)
-                                    ],
-                                  )
-                                ],
-                              ),
                             ],
                           ),
                         ],

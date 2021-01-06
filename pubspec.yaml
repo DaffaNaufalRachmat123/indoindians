@@ -75,6 +75,7 @@ flutter:
     - offer_logo.png
     - google_icon_logo.png
     - splash_screen_background.jpg
+    - user_icon_vector.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
