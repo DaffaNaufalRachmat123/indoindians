@@ -4,30 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:indoindians/Blocs/Authentication/AuthenticationBloc.dart';
 import 'package:indoindians/Blocs/Login/LoginBloc.dart';
-import 'package:indoindians/Blocs/Login/LoginEvent.dart';
 import 'package:indoindians/Blocs/Login/LoginState.dart';
 import 'package:indoindians/Blocs/Models/CustomerModel.dart';
-import 'package:indoindians/Blocs/PageChange/PageBloc.dart';
-import 'package:indoindians/Blocs/PageChange/PageState.dart';
-import 'package:indoindians/Components/ExpandableListView.dart';
 import 'package:indoindians/Components/NavigationDrawer.dart';
-import 'package:indoindians/Screens/AccountInfo.dart';
-import 'package:indoindians/Screens/ChangePasswordScreen.dart';
-import 'package:indoindians/Screens/LoginScreen.dart';
 
-class AccountScreen extends StatelessWidget {
+import 'ChangePasswordScreen.dart';
+
+class AccountInfo extends StatelessWidget {
   @override
-  Widget build ( BuildContext context ){
-    return MultiBlocProvider(
-        providers : [
-          BlocProvider<LoginBloc>(
-              create : ( context ) => LoginBloc(AuthenticationBloc() , CustomerModel())
-          ),
-          BlocProvider<PageBloc>(
-            create : ( context ) => PageBloc(PageInitial())
-          )
-        ],
-        child : Account()
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create : ( context ) => LoginBloc(AuthenticationBloc() , CustomerModel()),
+      child : Account()
     );
   }
 }
@@ -37,9 +25,8 @@ class Account extends StatefulWidget {
   AccountState createState () => AccountState();
 }
 
-class AccountState extends State<Account> {
+class AccountState extends State<Account>{
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
-  LoginBloc loginBloc;
   Route _createRouteChangePasswordScreen() {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => ChangePasswordScreen(),
@@ -59,26 +46,10 @@ class AccountState extends State<Account> {
   }
   @override
   Widget build ( BuildContext context ){
-    loginBloc = BlocProvider.of<LoginBloc>(context);
-    return MultiBlocListener(
-      listeners : [
-        BlocListener<LoginBloc , LoginState>(
-          listener : ( context , state ) {
-            if(state is Logout){
-              Navigator.pushAndRemoveUntil(context , MaterialPageRoute(
-                  builder : ( context ) => LoginScreen()
-              ) , (route) => false);
-            }
-          },
-        ),
-        BlocListener<PageBloc , PageState>(
-          listener : ( context , state ){
-            if(state is OnPageChange){
-              print("Page Change");
-            }
-          },
-        )
-      ],
+    return BlocListener<LoginBloc , LoginState>(
+      listener : ( context , state ){
+
+      },
       child : BlocBuilder<LoginBloc , LoginState>(
         builder : ( context , state ){
           return Scaffold(
@@ -210,7 +181,7 @@ class AccountState extends State<Account> {
                                                         mainAxisAlignment : MainAxisAlignment.start,
                                                         children: <Widget>[
                                                           Icon(
-                                                              Icons.person,
+                                                              Icons.person_pin,
                                                               size : 25,
                                                               color : Colors.black
                                                           ),
@@ -218,55 +189,11 @@ class AccountState extends State<Account> {
                                                           Text("Account Information" , style : TextStyle(
                                                               color : Colors.black,
                                                               fontFamily : 'Times New Roman',
-                                                              fontSize : 14
+                                                              fontSize : 17
                                                           ))
                                                         ],
                                                       )
                                                   ),
-                                                  SizedBox(height : 20),
-                                                  InkWell(
-                                                      onTap : (){
-
-                                                      },
-                                                      child : Row(
-                                                        mainAxisAlignment : MainAxisAlignment.start,
-                                                        children: <Widget>[
-                                                          Icon(
-                                                            Icons.shopping_cart,
-                                                            color : Colors.black,
-                                                            size : 25,
-                                                          ),
-                                                          SizedBox(width : 5),
-                                                          Text("My Orders" , style : TextStyle(
-                                                              color : Colors.black,
-                                                              fontFamily : 'Times New Roman',
-                                                              fontSize : 14
-                                                          ))
-                                                        ],
-                                                      )
-                                                  ),
-                                                  SizedBox(height : 20),
-                                                  InkWell(
-                                                      onTap : (){
-
-                                                      },
-                                                      child : Row(
-                                                        mainAxisAlignment : MainAxisAlignment.start,
-                                                        children: <Widget>[
-                                                          Icon(
-                                                              Icons.favorite_border,
-                                                              color : Colors.black,
-                                                              size : 25
-                                                          ),
-                                                          SizedBox(width : 5),
-                                                          Text("My Wishlist" , style : TextStyle(
-                                                              color : Colors.black,
-                                                              fontFamily : 'Times New Roman',
-                                                              fontSize : 14
-                                                          ))
-                                                        ],
-                                                      )
-                                                  )
                                                 ],
                                               )
                                           ),
@@ -281,71 +208,91 @@ class AccountState extends State<Account> {
                                               margin : EdgeInsets.only(left : 30 , right : 30 , top : 10),
                                               child : Column(
                                                 children: <Widget>[
+                                                  Row(
+                                                    mainAxisAlignment : MainAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      SizedBox(width : 5),
+                                                      Text("Name : " , style : TextStyle(
+                                                          color : Colors.black,
+                                                          fontFamily : 'Times New Roman',
+                                                          fontSize : 15.5
+                                                      )),
+                                                      Text("Jakha Surya" , style : TextStyle(
+                                                        color : Colors.black,
+                                                        fontFamily : "Times New Roman",
+                                                        fontSize : 15.5
+                                                      ))
+                                                    ],
+                                                  ),
+                                                  SizedBox(height : 20),
+                                                  Row(
+                                                    mainAxisAlignment : MainAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      SizedBox(width : 5),
+                                                      Text("Email : " , style : TextStyle(
+                                                          color : Colors.black,
+                                                          fontFamily : 'Times New Roman',
+                                                          fontSize : 15.5
+                                                      )),
+                                                      Text("jakhasurya@gmail.com" , style : TextStyle(
+                                                          color : Colors.black,
+                                                          fontFamily : "Times New Roman",
+                                                          fontSize : 15.5
+                                                      ))
+                                                    ],
+                                                  ),
+                                                  SizedBox(height : 20),
+                                                  Row(
+                                                    mainAxisAlignment : MainAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      SizedBox(width : 5),
+                                                      Text("Phone : " , style : TextStyle(
+                                                          color : Colors.black,
+                                                          fontFamily : 'Times New Roman',
+                                                          fontSize : 15.5
+                                                      )),
+                                                      Text("0838-9094-4476" , style : TextStyle(
+                                                          color : Colors.black,
+                                                          fontFamily : "Times New Roman",
+                                                          fontSize : 15.5
+                                                      ))
+                                                    ],
+                                                  ),
+                                                ],
+                                              )
+                                          ),
+                                          SizedBox(height : 15),
+                                          Container(
+                                              margin : EdgeInsets.only(left : 30 , right : 30 , top : 10),
+                                              child : Column(
+                                                children: <Widget>[
                                                   InkWell(
-                                                      onTap : (){
-
+                                                      onTap : () async {
+                                                        var response = await Navigator.push(context , _createRouteChangePasswordScreen());
+                                                        if(response != null){
+                                                          if(response["is_change_success"] == true){
+                                                            successDialog(context ,
+                                                                "Berhasil Ubah Password");
+                                                          }
+                                                        }
                                                       },
                                                       child : Row(
                                                         mainAxisAlignment : MainAxisAlignment.start,
                                                         children: <Widget>[
                                                           Icon(
-                                                              Icons.person,
+                                                              Icons.lock,
                                                               size : 25,
-                                                              color : Colors.black
+                                                              color : Color.fromARGB(255 , 27 , 42 , 61)
                                                           ),
                                                           SizedBox(width : 5),
-                                                          Text("Stored Payment Methods" , style : TextStyle(
-                                                              color : Colors.black,
+                                                          Text("Edit Change Password" , style : TextStyle(
+                                                              color : Color.fromARGB(255 , 27 , 42 , 61),
                                                               fontFamily : 'Times New Roman',
-                                                              fontSize : 14
+                                                              fontSize : 16
                                                           ))
                                                         ],
                                                       )
                                                   ),
-                                                  SizedBox(height : 20),
-                                                  InkWell(
-                                                      onTap : (){
-
-                                                      },
-                                                      child : Row(
-                                                        mainAxisAlignment : MainAxisAlignment.start,
-                                                        children: <Widget>[
-                                                          Icon(
-                                                            Icons.thumb_up,
-                                                            color : Colors.black,
-                                                            size : 25,
-                                                          ),
-                                                          SizedBox(width : 5),
-                                                          Text("My Product Reviews" , style : TextStyle(
-                                                              color : Colors.black,
-                                                              fontFamily : 'Times New Roman',
-                                                              fontSize : 14
-                                                          ))
-                                                        ],
-                                                      )
-                                                  ),
-                                                  SizedBox(height : 20),
-                                                  InkWell(
-                                                      onTap : (){
-
-                                                      },
-                                                      child : Row(
-                                                        mainAxisAlignment : MainAxisAlignment.start,
-                                                        children: <Widget>[
-                                                          Icon(
-                                                              Icons.favorite_border,
-                                                              color : Colors.black,
-                                                              size : 25
-                                                          ),
-                                                          SizedBox(width : 5),
-                                                          Text("Billing Agreements" , style : TextStyle(
-                                                              color : Colors.black,
-                                                              fontFamily : 'Times New Roman',
-                                                              fontSize : 14
-                                                          ))
-                                                        ],
-                                                      )
-                                                  )
                                                 ],
                                               )
                                           ),
@@ -356,33 +303,41 @@ class AccountState extends State<Account> {
                                               height : 0.5,
                                               color : Color.fromARGB(255 , 27 , 42 , 61)
                                           ),
+                                          SizedBox(height : 15),
                                           Container(
                                               margin : EdgeInsets.only(left : 30 , right : 30 , top : 10),
                                               child : Column(
                                                 children: <Widget>[
                                                   InkWell(
-                                                      onTap : (){
-                                                        loginBloc.add(LogoutAccount());
+                                                      onTap : () async {
+
                                                       },
                                                       child : Row(
                                                         mainAxisAlignment : MainAxisAlignment.start,
                                                         children: <Widget>[
                                                           Icon(
-                                                              Icons.exit_to_app,
+                                                              Icons.home,
                                                               size : 25,
-                                                              color : Colors.black
+                                                              color : Color.fromARGB(255 , 27 , 42 , 61)
                                                           ),
                                                           SizedBox(width : 5),
-                                                          Text("Exit" , style : TextStyle(
-                                                              color : Colors.black,
+                                                          Text("Edit Address" , style : TextStyle(
+                                                              color : Color.fromARGB(255 , 27 , 42 , 61),
                                                               fontFamily : 'Times New Roman',
-                                                              fontSize : 14
+                                                              fontSize : 16
                                                           ))
                                                         ],
                                                       )
                                                   ),
                                                 ],
                                               )
+                                          ),
+                                          SizedBox(height : 10),
+                                          Container(
+                                              width : MediaQuery.of(context).size.width,
+                                              margin : EdgeInsets.symmetric(horizontal : 20),
+                                              height : 0.5,
+                                              color : Color.fromARGB(255 , 27 , 42 , 61)
                                           ),
                                         ],
                                       ),
