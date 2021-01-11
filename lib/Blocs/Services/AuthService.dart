@@ -109,4 +109,52 @@ class AuthService {
       };
     }
   }
+  Future getProfile(String token) async {
+    var response = await dio.get(UriConfig.getOldUrl() + "/rest/default/V1/customers/me" , options : Options(
+      headers : {
+        "Content-Type" : "application/json",
+        "Authorization" : token
+      },
+      followRedirects: false,
+      validateStatus : (status){
+        return status <= 500;
+      }
+    ));
+    print('token : ' + token);
+    print('response : ' + response.statusCode.toString());
+    if(response.statusCode == 200){
+      return {
+        "is_success" : true,
+        "data" : response.data
+      };
+    } else {
+      return {
+        "is_success" : false,
+        "data" : response.data
+      };
+    }
+  }
+  Future getCategoryList(String token , int depth , int rootCategoryId) async {
+    var response = await dio.get(UriConfig.getOldUrl() + "/rest/default/V1/categories?depth=${depth}&rootCategoryId=${rootCategoryId}" , options : Options(
+      headers : {
+        "Content-Type" : "application/json",
+        "Authorization" : token
+      },
+      followRedirects : false,
+      validateStatus : (status){
+        return status <= 500;
+      }
+    ));
+    if(response.statusCode == 200){
+      return {
+        "is_success" : true,
+        "data" : response.data
+      };
+    } else {
+      return {
+        "is_success" : false,
+        "data" : response.data
+      };
+    }
+  }
 }
