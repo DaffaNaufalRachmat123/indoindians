@@ -3,7 +3,7 @@ import 'package:indoindians/Blocs/Authentication/AuthenticationBloc.dart';
 import 'package:indoindians/Blocs/Authentication/AuthenticationEvent.dart';
 import 'package:indoindians/Blocs/Models/CustomerModel.dart';
 import 'package:indoindians/Blocs/Models/User.dart';
-import 'package:indoindians/Blocs/Services/AuthService.dart';
+import 'package:indoindians/Blocs/Services/GeneralService.dart';
 import 'package:indoindians/Configs/Constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'LoginEvent.dart';
@@ -37,7 +37,7 @@ class LoginBloc extends Bloc<LoginEvent , LoginState> {
   Stream<LoginState> mapForgotPassword(LoginForgot event) async* {
     yield ForgotLoading();
     try {
-      AuthService auth = new AuthService();
+      GeneralService auth = new GeneralService();
       final response = await auth.forgotPassword(event.email);
       if(response['is_success'] == true){
         yield ForgotSuccess();
@@ -51,7 +51,7 @@ class LoginBloc extends Bloc<LoginEvent , LoginState> {
   Stream<LoginState> mapLoginWithEmailPassword(LoginWithEmailPassword event) async* {
     yield LoginLoading();
     try {
-      AuthService authService = new AuthService();
+      GeneralService authService = new GeneralService();
       var payload = CustomerModel(
           customer : Customer(
               email : '',

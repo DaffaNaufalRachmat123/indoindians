@@ -26,7 +26,6 @@ class Category {
       position : json['position'] as int,
       level : json['level'] as int,
       product_count : json['product_count'] as int,
-      children_data: json['children_data'] as List<SubCategory>
     );
   }
 }

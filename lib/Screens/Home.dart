@@ -55,6 +55,8 @@ class HomeState extends State<Homes> {
   List<NavItem> itemList = new List<NavItem>();
 
   List<Widget> generateCategoryList(Category category){
+    if(category == null)
+      print('data category null');
     List<SubCategory> data = category.children_data[0].children_data;
     final List<Widget> categoryList = data.map((item) => Container(
       child : Column(
@@ -367,10 +369,11 @@ class HomeState extends State<Homes> {
                                           state is CategoryLoading ?
                                           Container(
                                             width : MediaQuery.of(context).size.width,
+                                            color : Colors.white,
                                             child : Center(
                                               child : CircularProgressIndicator()
                                             )
-                                          ) : generateCategoryList(state is CategorySuccess ? state.category : [])
+                                          ) : generateCategoryList(state is CategorySuccess ? state.category : null)
                                           /*SizedBox(height : 30),
                                           Row(
                                             mainAxisAlignment : MainAxisAlignment.start,

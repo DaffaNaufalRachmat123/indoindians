@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:indoindians/Blocs/Models/CustomerModel.dart';
 import 'package:indoindians/Blocs/Models/User.dart';
-import 'package:indoindians/Blocs/Services/AuthService.dart';
+import 'package:indoindians/Blocs/Services/GeneralService.dart';
 import 'package:indoindians/Configs/Constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'AuthenticationEvent.dart';

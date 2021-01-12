@@ -4,9 +4,10 @@ import 'dart:core';
 import 'package:dio/dio.dart';
 import 'package:indoindians/Blocs/Models/ChangePwd.dart';
 import 'package:indoindians/Blocs/Models/CustomerModel.dart';
+import 'package:indoindians/Configs/Constant.dart';
 import '../../Configs/UriConfig.dart';
 
-class AuthService {
+class GeneralService {
   Dio dio = new Dio();
   Future registerCustomer(CustomerModel customerModel) async {
     print("Data : " + customerModel.toJsonRegister().toString());
@@ -42,7 +43,7 @@ class AuthService {
         return status <= 500;
       }
     ));
-    print(response);
+    print("Response Login : " + response.toString());
     if(response.statusCode == 200){
       return {
         "is_success" : true,
@@ -135,7 +136,30 @@ class AuthService {
     }
   }
   Future getCategoryList(String token , int depth , int rootCategoryId) async {
-    var response = await dio.get(UriConfig.getOldUrl() + "/rest/default/V1/categories?depth=${depth}&rootCategoryId=${rootCategoryId}" , options : Options(
+    var response = await dio.get(UriConfig.getOldUrl() + "/rest/default/V1/categories?depth=$depth&rootCategoryId=$rootCategoryId" , options : Options(
+      headers : {
+        "Content-Type" : "application/json",
+        "Authorization" : Constant.STATIC_TOKEN
+      },
+      followRedirects : false,
+      validateStatus : (status){
+        return status <= 500;
+      }
+    ));
+    if(response.statusCode == 200){
+      return {
+        "is_success" : true,
+        "data" : response.data
+      };
+    } else {
+      return {
+        "is_success" : false,
+        "data" : response.data
+      };
+    }
+  }
+  Future getProductDetails(String token , String name) async {
+    var response = await dio.get(UriConfig.getOldUrl() + "/rest/default/V1/products/${name}" , options : Options(
       headers : {
         "Content-Type" : "application/json",
         "Authorization" : token

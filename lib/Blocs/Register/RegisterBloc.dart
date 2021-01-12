@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:indoindians/Blocs/Models/CustomerModel.dart';
 import 'package:indoindians/Blocs/Register/RegisterEvent.dart';
 import 'package:indoindians/Blocs/Register/RegisterState.dart';
-import 'package:indoindians/Blocs/Services/AuthService.dart';
+import 'package:indoindians/Blocs/Services/GeneralService.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent , RegisterState> {
   RegisterBloc(RegisterState initialState) : super(initialState);
@@ -17,7 +17,7 @@ class RegisterBloc extends Bloc<RegisterEvent , RegisterState> {
   Stream<RegisterState> registerWithData(RegisterWithData event) async* {
     yield RegisterLoading();
     try {
-      AuthService auth = new AuthService();
+      GeneralService auth = new GeneralService();
       var payload = CustomerModel(
           customer : Customer(
               email : event.model.customer.email,

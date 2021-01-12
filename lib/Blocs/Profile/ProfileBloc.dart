@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:indoindians/Blocs/Models/User.dart';
 import 'package:indoindians/Blocs/Profile/ProfileEvent.dart';
 import 'package:indoindians/Blocs/Profile/ProfileState.dart';
-import 'package:indoindians/Blocs/Services/AuthService.dart';
+import 'package:indoindians/Blocs/Services/GeneralService.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent , ProfileState> {
   ProfileBloc(ProfileState initialState) : super(initialState);
@@ -15,7 +15,7 @@ class ProfileBloc extends Bloc<ProfileEvent , ProfileState> {
   Stream<ProfileState> getProfileData(GetProfile event) async* {
     yield ProfileLoading();
     try {
-      AuthService service = new AuthService();
+      GeneralService service = new GeneralService();
       var response = await service.getProfile(event.token);
       if(response['is_success'] == true){
         var user = User.fromJson(response['data']);

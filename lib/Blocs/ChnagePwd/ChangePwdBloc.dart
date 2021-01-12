@@ -6,7 +6,7 @@ import 'package:indoindians/Blocs/Authentication/AuthenticationEvent.dart';
 import 'package:indoindians/Blocs/Models/ChangePwd.dart';
 import 'package:indoindians/Blocs/Models/CustomerModel.dart';
 import 'package:indoindians/Blocs/Models/User.dart';
-import 'package:indoindians/Blocs/Services/AuthService.dart';
+import 'package:indoindians/Blocs/Services/GeneralService.dart';
 import 'package:indoindians/Configs/Constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'ChangePwdEvent.dart';
@@ -24,7 +24,7 @@ class ChangePwdBloc extends Bloc<ChangePwdEvent , ChangePwdState> {
   Stream<ChangePwdState> changePassword(ChangePwdData event) async* {
     yield ChangePwdLoading();
     try {
-      AuthService authService = new AuthService();
+      GeneralService authService = new GeneralService();
       var payload = ChangePwd(
         curPassword: event.curPassword,
         newPassword: event.newPassword
